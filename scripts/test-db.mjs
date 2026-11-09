@@ -1,12 +1,21 @@
-import {spawnSync} from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import dotenv from 'dotenv';
-dotenv.config({path:'.env.test'});
-if(!process.env.DATABASE_URL||!new URL(process.env.DATABASE_URL).pathname.endsWith('/nexus_test'))throw new Error('Las pruebas requieren .env.test con base nexus_test. Nunca apuntar a producción.');
-const env={...process.env,NODE_ENV:'test',PORT:'3001',APP_ORIGIN:'http://127.0.0.1:3001'};
-const run=(args)=>{const result=spawnSync(process.execPath,args,{env,stdio:'inherit'});if(result.status!==0)process.exit(result.status??1);};
-fs.mkdirSync('test-results',{recursive:true});
-run(['node_modules/prisma/build/index.js','migrate','deploy']);
-run(['node_modules/tsx/dist/cli.mjs','backend/prisma/seed.ts']);
-run(['node_modules/vitest/vitest.mjs','run']);
-if(process.argv.includes('--e2e'))run(['node_modules/@playwright/test/cli.js','test']);
+dotenv.config({ path: '.env.test' });
+if (
+  !process.env.DATABASE_URL ||
+  !new URL(process.env.DATABASE_URL).pathname.endsWith('/nexus_test')
+)
+  throw new Error(
+    'Las pruebas requieren .env.test con base nexus_test. Nunca apuntar a producción.',
+  );
+const env = { ...process.env, NODE_ENV: 'test', PORT: '3001', APP_ORIGIN: 'http://127.0.0.1:3001' };
+const run = (args) => {
+  const result = spawnSync(process.execPath, args, { env, stdio: 'inherit' });
+  if (result.status !== 0) process.exit(result.status ?? 1);
+};
+fs.mkdirSync('test-results', { recursive: true });
+run(['node_modules/prisma/build/index.js', 'migrate', 'deploy']);
+run(['node_modules/tsx/dist/cli.mjs', 'backend/prisma/seed.ts']);
+if (!process.argv.includes('--e2e-only')) run(['node_modules/vitest/vitest.mjs', 'run']);
+if (process.argv.includes('--e2e') || process.argv.includes('--e2e-only')) run(['node_modules/@playwright/test/cli.js', 'test']);

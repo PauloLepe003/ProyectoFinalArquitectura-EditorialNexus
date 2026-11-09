@@ -1,13 +1,327 @@
-import {useState} from 'react';
-import {api,money} from '../services/api';
-import {ActionForm,Badge,Breakdown,Field,Heading,Modal,State,useApp,useLoad} from '../components/shared';
-export function Requests(){const {user,notify}=useApp();const {data,error,loading,reload}=useLoad('/requests');const [create,setCreate]=useState(false),[selected,setSelected]=useState<any>(null),[quote,setQuote]=useState(false),[reject,setReject]=useState(false),[decision,setDecision]=useState<boolean|null>(null);const advisor=['ADVISOR','ADMIN'].includes(user.role);const update=(row:any)=>{setSelected(row);reload();};
-return <section className="section"><Heading eyebrow={advisor?'PANEL COMERCIAL':'ATENCIÓN A INSTITUCIONES'} title={advisor?'Solicitudes y cotizaciones':'Mis cotizaciones'}>{!advisor&&<button className="button" disabled={user.institution?.status!=='APPROVED'} onClick={()=>setCreate(true)}>Nueva solicitud +</button>}</Heading>{!advisor&&user.institution?.status!=='APPROVED'&&<div className="alert">Tu institución está pendiente de aprobación o fue rechazada. Un administrador debe validarla para solicitar cotizaciones.</div>}<p className="muted">Ediciones especiales, impresión bajo demanda y pedidos que superan el inventario.</p><State error={error} loading={loading}><div className="request-grid">{data?.map((r:any)=><button className="panel request-card" key={r.id} onClick={()=>{setSelected(r);setQuote(false);setReject(false);}}><div className="row between"><span className="eyebrow">{r.quantity} EJEMPLARES</span><Badge value={r.status}/></div><h2>{r.title}</h2><p>{advisor?r.user.institution?.name:r.coverFinish}</p><p className="muted">Entrega solicitada: {r.requiredDate.slice(0,10)}</p><div className="row between"><span>{r.quote?money(r.quote.breakdown.total):'Pendiente de evaluación'}</span><span>Ver solicitud →</span></div></button>)}</div>{data?.length===0&&<div className="state">No hay solicitudes registradas.</div>}</State>
-{create&&<Modal title="Nueva solicitud institucional" onClose={()=>setCreate(false)}><ActionForm submit="Enviar solicitud" onSubmit={async f=>{await api('/requests','POST',{...Object.fromEntries(f),quantity:Number(f.get('quantity'))});setCreate(false);reload();notify('Solicitud enviada al equipo comercial.');}}><Field label="Obra o título solicitado"><input name="title" required maxLength={300}/></Field><div className="two"><Field label="Cantidad estimada"><input name="quantity" type="number" min="1" max="100000" required/></Field><Field label="Fecha requerida"><input name="requiredDate" type="date" min={new Date(Date.now()+86400000).toISOString().slice(0,10)} required/></Field></div><Field label="Acabado de portada"><input name="coverFinish" placeholder="Ej. tapa dura con laminado mate" required/></Field><Field label="Tipo de papel"><input name="paper" placeholder="Ej. papel bond de 80 g" required/></Field><Field label="Observaciones adicionales"><textarea name="notes" maxLength={5000} rows={3}/></Field></ActionForm></Modal>}
-{selected&&<Modal title={selected.title} onClose={()=>{setSelected(null);setDecision(null);}}><div className="row between"><Badge value={selected.status}/><small>{new Date(selected.createdAt).toLocaleDateString('es-GT')}</small></div><dl className="bibliography"><div><dt>Cliente</dt><dd>{selected.user.name} · {selected.user.institution?.name}</dd></div><div><dt>Cantidad</dt><dd>{selected.quantity}</dd></div><div><dt>Portada / papel</dt><dd>{selected.coverFinish} / {selected.paper}</dd></div><div><dt>Fecha requerida</dt><dd>{selected.requiredDate.slice(0,10)}</dd></div></dl><p>{selected.notes}</p>{selected.quote&&<div className="quote-box"><h3>Cotización NX-{selected.quote.number}</h3><p>{selected.quote.description}</p><p>{selected.quote.quantity} ejemplares a {money(selected.quote.unitPrice)}</p><p>Válida hasta {selected.quote.validUntil.slice(0,10)}</p><Breakdown data={selected.quote.breakdown}/><a className="button secondary" href={'/api/requests/'+selected.id+'/pdf'} target="_blank" rel="noreferrer">Descargar PDF</a></div>}
-{advisor&&['PENDING','QUOTED'].includes(selected.status)&&<div className="row"><button className="button" onClick={()=>{setQuote(!quote);setReject(false);}}>{selected.quote?'Revisar cotización':'Emitir cotización'}</button><button onClick={()=>{setReject(!reject);setQuote(false);}}>Rechazar solicitud</button></div>}
-{quote&&<ActionForm submit="Guardar y emitir cotización" onSubmit={async f=>{update(await api('/requests/'+selected.id+'/quote','POST',{...Object.fromEntries(f),quantity:Number(f.get('quantity'))}));setQuote(false);notify('Cotización emitida.');}}><Field label="Descripción de la propuesta"><textarea name="description" required maxLength={3000} defaultValue={selected.quote?.description??selected.title}/></Field><div className="two"><Field label="Cantidad cotizada"><input name="quantity" type="number" required min="1" max="100000" defaultValue={selected.quote?.quantity??selected.quantity}/></Field><Field label="Precio unitario Q"><input name="unitPrice" type="number" step="0.01" min="0.01" required defaultValue={selected.quote?.unitPrice}/></Field></div><Field label="Válida hasta"><input name="validUntil" type="date" required defaultValue={selected.quote?.validUntil.slice(0,10)??new Date(Date.now()+14*86400000).toISOString().slice(0,10)}/></Field><p className="muted">Los descuentos e impuestos se calculan automáticamente al emitir.</p></ActionForm>}
-{reject&&<ActionForm submit="Confirmar rechazo" onSubmit={async f=>{update(await api('/requests/'+selected.id+'/reject','POST',{reason:f.get('reason')}));setReject(false);}}><Field label="Motivo del rechazo"><textarea name="reason" required maxLength={2000}/></Field></ActionForm>}
-{!advisor&&selected.status==='QUOTED'&&<div className="row"><button className="button" onClick={()=>setDecision(true)}>Aceptar propuesta</button><button onClick={()=>setDecision(false)}>Rechazar propuesta</button></div>}
-{decision!==null&&<div className="panel"><p>¿Confirmas que deseas {decision?'aceptar':'rechazar'} esta cotización?</p><ActionForm submit="Confirmar decisión" onSubmit={async()=>{update(await api('/requests/'+selected.id+'/decision','POST',{accept:decision}));setDecision(null);notify('Tu respuesta ha sido registrada.');}}><button type="button" onClick={()=>setDecision(null)}>Volver</button></ActionForm></div>}
-<details className="history"><summary>Trazabilidad de la solicitud ({selected.history.length})</summary>{selected.history.map((h:any)=><div key={h.id}><strong>{h.action}</strong><small> · {new Date(h.createdAt).toLocaleString('es-GT')}</small><p>{h.details.startsWith('{')?'Propuesta y versión anterior registradas en el historial.':h.details}</p>{h.details.startsWith('{')&&<details><summary>Ver registro completo</summary><pre>{JSON.stringify(JSON.parse(h.details),null,2)}</pre></details>}</div>)}</details></Modal>}</section>;}
+import { useState } from 'react';
+import { api, money } from '../services/api';
+import {
+  ActionForm,
+  Badge,
+  Breakdown,
+  Field,
+  Heading,
+  Modal,
+  State,
+  useApp,
+  useLoad,
+} from '../components/shared';
+export function Requests() {
+  const { user, notify } = useApp();
+  const { data, error, loading, reload } = useLoad('/requests');
+  const [create, setCreate] = useState(false),
+    [selected, setSelected] = useState<any>(null),
+    [quote, setQuote] = useState(false),
+    [reject, setReject] = useState(false),
+    [decision, setDecision] = useState<boolean | null>(null);
+  const advisor = ['ADVISOR', 'ADMIN'].includes(user.role);
+  const update = (row: any) => {
+    setSelected(row);
+    reload();
+  };
+  return (
+    <section className="section">
+      <Heading
+        eyebrow={advisor ? 'PANEL COMERCIAL' : 'ATENCIÓN A INSTITUCIONES'}
+        title={advisor ? 'Solicitudes y cotizaciones' : 'Mis cotizaciones'}
+      >
+        {!advisor && (
+          <button
+            className="button"
+            disabled={user.institution?.status !== 'APPROVED'}
+            onClick={() => setCreate(true)}
+          >
+            Nueva solicitud +
+          </button>
+        )}
+      </Heading>
+      {!advisor && user.institution?.status !== 'APPROVED' && (
+        <div className="alert">
+          Tu institución está pendiente de aprobación o fue rechazada. Un administrador debe
+          validarla para solicitar cotizaciones.
+        </div>
+      )}
+      <p className="muted">
+        Ediciones especiales, impresión bajo demanda y pedidos que superan el inventario.
+      </p>
+      <State error={error} loading={loading}>
+        <div className="request-grid">
+          {data?.map((r: any) => (
+            <button
+              className="panel request-card"
+              key={r.id}
+              onClick={() => {
+                setSelected(r);
+                setQuote(false);
+                setReject(false);
+              }}
+            >
+              <div className="row between">
+                <span className="eyebrow">{r.quantity} EJEMPLARES</span>
+                <Badge value={r.status} />
+              </div>
+              <h2>{r.title}</h2>
+              <p>{advisor ? r.user.institution?.name : r.coverFinish}</p>
+              <p className="muted">Entrega solicitada: {r.requiredDate.slice(0, 10)}</p>
+              <div className="row between">
+                <span>{r.quote ? money(r.quote.breakdown.total) : 'Pendiente de evaluación'}</span>
+                <span>Ver solicitud →</span>
+              </div>
+            </button>
+          ))}
+        </div>
+        {data?.length === 0 && <div className="state">No hay solicitudes registradas.</div>}
+      </State>
+      {create && (
+        <Modal title="Nueva solicitud institucional" onClose={() => setCreate(false)}>
+          <ActionForm
+            submit="Enviar solicitud"
+            onSubmit={async (f) => {
+              await api('/requests', 'POST', {
+                ...Object.fromEntries(f),
+                quantity: Number(f.get('quantity')),
+              });
+              setCreate(false);
+              reload();
+              notify('Solicitud enviada al equipo comercial.');
+            }}
+          >
+            <Field label="Obra o título solicitado">
+              <input name="title" required maxLength={300} />
+            </Field>
+            <div className="two">
+              <Field label="Cantidad estimada">
+                <input name="quantity" type="number" min="1" max="100000" required />
+              </Field>
+              <Field label="Fecha requerida">
+                <input
+                  name="requiredDate"
+                  type="date"
+                  min={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}
+                  required
+                />
+              </Field>
+            </div>
+            <Field label="Acabado de portada">
+              <input name="coverFinish" placeholder="Ej. tapa dura con laminado mate" required />
+            </Field>
+            <Field label="Tipo de papel">
+              <input name="paper" placeholder="Ej. papel bond de 80 g" required />
+            </Field>
+            <Field label="Observaciones adicionales">
+              <textarea name="notes" maxLength={5000} rows={3} />
+            </Field>
+          </ActionForm>
+        </Modal>
+      )}
+      {selected && (
+        <Modal
+          title={selected.title}
+          onClose={() => {
+            setSelected(null);
+            setDecision(null);
+          }}
+        >
+          <div className="row between">
+            <Badge value={selected.status} />
+            <small>{new Date(selected.createdAt).toLocaleDateString('es-GT')}</small>
+          </div>
+          <dl className="bibliography">
+            <div>
+              <dt>Cliente</dt>
+              <dd>
+                {selected.user.name} · {selected.user.institution?.name}
+              </dd>
+            </div>
+            <div>
+              <dt>Cantidad</dt>
+              <dd>{selected.quantity}</dd>
+            </div>
+            <div>
+              <dt>Portada / papel</dt>
+              <dd>
+                {selected.coverFinish} / {selected.paper}
+              </dd>
+            </div>
+            <div>
+              <dt>Fecha requerida</dt>
+              <dd>{selected.requiredDate.slice(0, 10)}</dd>
+            </div>
+          </dl>
+          <p>{selected.notes}</p>
+          {selected.quote && (
+            <div className="quote-box">
+              <h3>Cotización NX-{selected.quote.number}</h3>
+              <p>{selected.quote.description}</p>
+              <p>
+                {selected.quote.quantity} ejemplares a {money(selected.quote.unitPrice)}
+              </p>
+              <p>Válida hasta {selected.quote.validUntil.slice(0, 10)}</p>
+              <Breakdown data={selected.quote.breakdown} />
+              <a
+                className="button secondary"
+                href={'/api/requests/' + selected.id + '/pdf'}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Descargar PDF
+              </a>
+            </div>
+          )}
+          {advisor && ['PENDING', 'QUOTED'].includes(selected.status) && (
+            <div className="row">
+              <button
+                className="button"
+                onClick={() => {
+                  setQuote(!quote);
+                  setReject(false);
+                }}
+              >
+                {selected.quote ? 'Revisar cotización' : 'Emitir cotización'}
+              </button>
+              <button
+                onClick={() => {
+                  setReject(!reject);
+                  setQuote(false);
+                }}
+              >
+                Rechazar solicitud
+              </button>
+            </div>
+          )}
+          {quote && (
+            <ActionForm
+              submit="Guardar y emitir cotización"
+              onSubmit={async (f) => {
+                update(
+                  await api('/requests/' + selected.id + '/quote', 'POST', {
+                    ...Object.fromEntries(f),
+                    quantity: Number(f.get('quantity')),
+                  }),
+                );
+                setQuote(false);
+                notify('Cotización emitida.');
+              }}
+            >
+              <Field label="Descripción de la propuesta">
+                <textarea
+                  name="description"
+                  required
+                  maxLength={3000}
+                  defaultValue={selected.quote?.description ?? selected.title}
+                />
+              </Field>
+              <div className="two">
+                <Field label="Cantidad cotizada">
+                  <input
+                    name="quantity"
+                    type="number"
+                    required
+                    min="1"
+                    max="100000"
+                    defaultValue={selected.quote?.quantity ?? selected.quantity}
+                  />
+                </Field>
+                <Field label="Precio unitario Q">
+                  <input
+                    name="unitPrice"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    required
+                    defaultValue={selected.quote?.unitPrice}
+                  />
+                </Field>
+              </div>
+              <Field label="Válida hasta">
+                <input
+                  name="validUntil"
+                  type="date"
+                  required
+                  defaultValue={
+                    selected.quote?.validUntil.slice(0, 10) ??
+                    new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)
+                  }
+                />
+              </Field>
+              <p className="muted">
+                Los descuentos e impuestos se calculan automáticamente al emitir.
+              </p>
+            </ActionForm>
+          )}
+          {reject && (
+            <ActionForm
+              submit="Confirmar rechazo"
+              onSubmit={async (f) => {
+                update(
+                  await api('/requests/' + selected.id + '/reject', 'POST', {
+                    reason: f.get('reason'),
+                  }),
+                );
+                setReject(false);
+              }}
+            >
+              <Field label="Motivo del rechazo">
+                <textarea name="reason" required maxLength={2000} />
+              </Field>
+            </ActionForm>
+          )}
+          {!advisor && selected.status === 'QUOTED' && (
+            <div className="row">
+              <button className="button" onClick={() => setDecision(true)}>
+                Aceptar propuesta
+              </button>
+              <button onClick={() => setDecision(false)}>Rechazar propuesta</button>
+            </div>
+          )}
+          {decision !== null && (
+            <div className="panel">
+              <p>¿Confirmas que deseas {decision ? 'aceptar' : 'rechazar'} esta cotización?</p>
+              <ActionForm
+                submit="Confirmar decisión"
+                onSubmit={async () => {
+                  update(
+                    await api('/requests/' + selected.id + '/decision', 'POST', {
+                      accept: decision,
+                    }),
+                  );
+                  setDecision(null);
+                  notify('Tu respuesta ha sido registrada.');
+                }}
+              >
+                <button type="button" onClick={() => setDecision(null)}>
+                  Volver
+                </button>
+              </ActionForm>
+            </div>
+          )}
+          <details className="history">
+            <summary>Trazabilidad de la solicitud ({selected.history.length})</summary>
+            {selected.history.map((h: any) => (
+              <div key={h.id}>
+                <strong>{h.action}</strong>
+                <small> · {new Date(h.createdAt).toLocaleString('es-GT')}</small>
+                <p>
+                  {h.details.startsWith('{')
+                    ? 'Propuesta y versión anterior registradas en el historial.'
+                    : h.details}
+                </p>
+                {h.details.startsWith('{') && (
+                  <details>
+                    <summary>Ver registro completo</summary>
+                    <pre>{JSON.stringify(JSON.parse(h.details), null, 2)}</pre>
+                  </details>
+                )}
+              </div>
+            ))}
+          </details>
+        </Modal>
+      )}
+    </section>
+  );
+}
