@@ -23,7 +23,7 @@ Verificación: build correcto, 42/42 pruebas unitarias e integración aprobadas,
 | RNF-4.2 | Hash, validación, SQL seguro, XSS/CSRF y autorización | bcrypt, Zod, Prisma, React, Helmet, CSRF, RBAC | API seguridad y auditoría dependencias | Completo |
 | RNF-4.3 | Responsive, usabilidad y carga local <2 segundos | CSS Grid/Flexbox y estados | E2E escritorio/móvil y medición local | Parcial: responsive probado; rendimiento completo pendiente |
 | RNF-4.4 | Git, commits y propuesta de ramas | `.gitignore`, `docs/equipo-git.md` | `git log`, revisión de archivos ignorados | Completo |
-| ENT-01 | Fuente completa y repositorio público | Repositorio local | Git local; publicación no autorizada | Parcial: publicación GitHub autorizada en proceso |
+| ENT-01 | Fuente completa y repositorio público | Repositorio local | Git local y repositorio público verificado | Completo: repositorio público en main |
 | ENT-02 | DDL/DML, ≥10 libros y cinco usuarios | Prisma, `database/`, semilla 15 libros/5 cuentas | Migración, semilla doble, importación limpia | Completo |
 | ENT-03 | Diagrama, estructura, instalación y credenciales | README y `docs/` | Revisión documental y comandos locales | Completo |
 | ENT-04 | Defensa en vivo de 10 minutos | `docs/demo-10-minutos.md`, `docs/defensa.md` | Guion disponible; presentación humana externa | Parcial: exposición pendiente del equipo |
@@ -39,7 +39,7 @@ Verificación: build correcto, 42/42 pruebas unitarias e integración aprobadas,
 | Métricas desde la base e IVA editable | `models/admin.ts`, dashboard y parámetros |
 | Transacciones y stock no negativo | Serializable, actualización condicional, CHECK y reintento limitado |
 | Asociación de portadas | URL HTTPS o SVG local; no se implementa subida de archivos arbitrarios |
-| SQL reproducible y semilla idempotente | DDL y exportación DML más script Prisma; comprobación pendiente |
+| SQL reproducible y semilla idempotente | DDL y exportación DML más script Prisma; comprobación realizada |
 | Docker Compose | Configuración entregada; motor Docker no disponible en este equipo |
 | Pruebas aisladas | `scripts/test-db.mjs` exige `nexus_test` |
 | Organización para tres integrantes | Propuesta expresa sin atribuciones ficticias en `docs/equipo-git.md` |
@@ -47,3 +47,5 @@ Verificación: build correcto, 42/42 pruebas unitarias e integración aprobadas,
 ## Auditoría de rúbrica
 
 No se asigna 100/100 de forma automática. La estimación final se completará con resultados verificables en `docs/pruebas.md`; publicación, contribuciones de tres personas y sustentación en vivo no pueden darse por realizadas desde esta sesión.
+
+Repositorio público: https://github.com/PauloLepe003/ProyectoFinalArquitectura-EditorialNexus

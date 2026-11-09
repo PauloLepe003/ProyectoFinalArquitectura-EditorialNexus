@@ -252,5 +252,3 @@ SELECT pg_catalog.setval('public."Quote_number_seq"', GREATEST((SELECT COALESCE(
 --
 -- PostgreSQL database dump complete
 --
-
-

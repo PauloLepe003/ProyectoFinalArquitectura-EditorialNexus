@@ -177,7 +177,7 @@ El DDL incluye claves, índices, restricciones y protección del desglose financ
 
 ## Git y publicación
 
-No se publica automáticamente. Después de revisar el repositorio y crear un repositorio vacío en GitHub:
+Repositorio público publicado con autorización: https://github.com/PauloLepe003/ProyectoFinalArquitectura-EditorialNexus, rama `main`. Para publicar una copia propia en un repositorio nuevo:
 
 ```powershell
 git status
