@@ -1,0 +1,149 @@
+{
+  "date": "2026-11-09T23:36:27.617Z",
+  "results": [
+    {
+      "width": 1440,
+      "route": "/",
+      "readyMs": 368,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/catalogo",
+      "readyMs": 120,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/login",
+      "readyMs": 135,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/register",
+      "readyMs": 211,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "readyMs": 356,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/catalogo",
+      "readyMs": 172,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/login",
+      "readyMs": 88,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/register",
+      "readyMs": 81,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "readyMs": 368,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/catalogo",
+      "readyMs": 149,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/login",
+      "readyMs": 145,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/register",
+      "readyMs": 135,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "account": "admin",
+      "route": "/admin",
+      "readyMs": 195
+    },
+    {
+      "account": "admin",
+      "route": "/admin/books",
+      "readyMs": 161
+    },
+    {
+      "account": "admin",
+      "route": "/admin/authors",
+      "readyMs": 166
+    },
+    {
+      "account": "admin",
+      "route": "/admin/categories",
+      "readyMs": 232
+    },
+    {
+      "account": "admin",
+      "route": "/admin/users",
+      "readyMs": 129
+    },
+    {
+      "account": "admin",
+      "route": "/admin/orders",
+      "readyMs": 123
+    },
+    {
+      "account": "admin",
+      "route": "/admin/settings",
+      "readyMs": 110
+    },
+    {
+      "account": "asesor",
+      "route": "/requests",
+      "readyMs": 106
+    },
+    {
+      "account": "institucion",
+      "route": "/cart",
+      "readyMs": 131
+    },
+    {
+      "account": "institucion",
+      "route": "/orders",
+      "readyMs": 90
+    },
+    {
+      "account": "institucion",
+      "route": "/requests",
+      "readyMs": 100
+    },
+    {
+      "account": "institucion",
+      "route": "/profile",
+      "readyMs": 92
+    }
+  ]
+}

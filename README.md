@@ -186,3 +186,7 @@ git push -u origin main
 ```
 
 Si la rama local tiene otro nombre, ejecutar primero `git branch -M main`. No agregar `.env`, `.local/`, contraseñas reales ni archivos de sesiones. Propuesta de tres integrantes y ramas en [docs/equipo-git.md](docs/equipo-git.md). Los commits existentes reflejan únicamente el trabajo efectivamente realizado en esta sesión.
+
+## Auditoría final de entrega
+
+Ver [auditoría de 100 puntos](docs/auditoria-final.md). RF-01 a RF-05 verificados. Aplicación local en http://localhost:3000. Comprobaciones adicionales: `node scripts/verify-browser.mjs` y `node scripts/verify-local.mjs`. La sustentación y las contribuciones reales del equipo siguen siendo responsabilidad de sus integrantes.

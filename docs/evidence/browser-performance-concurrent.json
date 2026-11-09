@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-09T23:35:38.118Z",
+  "results": [
+    {
+      "width": 1440,
+      "route": "/",
+      "readyMs": 2913,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/catalogo",
+      "readyMs": 158,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/login",
+      "readyMs": 99,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "route": "/register",
+      "readyMs": 98,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "readyMs": 319,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/catalogo",
+      "readyMs": 125,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/login",
+      "readyMs": 105,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "route": "/register",
+      "readyMs": 94,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "readyMs": 294,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/catalogo",
+      "readyMs": 136,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/login",
+      "readyMs": 86,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "route": "/register",
+      "readyMs": 82,
+      "overflow": false,
+      "errors": []
+    }
+  ]
+}

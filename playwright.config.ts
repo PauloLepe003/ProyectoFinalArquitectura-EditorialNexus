@@ -2,6 +2,7 @@ import { defineConfig } from '@playwright/test';
 import fs from 'node:fs';
 export default defineConfig({
   testDir: 'tests/e2e',
+  outputDir: 'test-results/e2e',
   workers: 1,
   timeout: 45000,
   reporter: [['list'], ['html', { open: 'never' }]],

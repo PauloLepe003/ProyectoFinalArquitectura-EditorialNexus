@@ -21,8 +21,8 @@ Verificación: build correcto, 42/42 pruebas unitarias e integración aprobadas,
 | RF-05.3 | Gestión comercial por asesor | `api.ts`, `quotes.ts`, `Requests.tsx` | API RBAC y E2E dos sesiones | Completo |
 | RNF-4.1 | MVC estricto | `models/`, `controllers/`, `frontend/`, vista PDF | Revisión de imports, build y docs | Completo |
 | RNF-4.2 | Hash, validación, SQL seguro, XSS/CSRF y autorización | bcrypt, Zod, Prisma, React, Helmet, CSRF, RBAC | API seguridad y auditoría dependencias | Completo |
-| RNF-4.3 | Responsive, usabilidad y carga local <2 segundos | CSS Grid/Flexbox y estados | E2E escritorio/móvil y medición local | Parcial: responsive probado; rendimiento completo pendiente |
-| RNF-4.4 | Git, commits y propuesta de ramas | `.gitignore`, `docs/equipo-git.md` | `git log`, revisión de archivos ignorados | Completo |
+| RNF-4.3 | Responsive, usabilidad y carga local <2 segundos | CSS Grid/Flexbox y estados | E2E escritorio/móvil y medición local | Completo: 24 mediciones locales de 81–368 ms |
+| RNF-4.4 | Git, commits y propuesta de ramas | `.gitignore`, `docs/equipo-git.md` | `git log`, revisión de archivos ignorados | Parcial: falta colaboración real de tres integrantes |
 | ENT-01 | Fuente completa y repositorio público | Repositorio local | Git local y repositorio público verificado | Completo: repositorio público en main |
 | ENT-02 | DDL/DML, ≥10 libros y cinco usuarios | Prisma, `database/`, semilla 15 libros/5 cuentas | Migración, semilla doble, importación limpia | Completo |
 | ENT-03 | Diagrama, estructura, instalación y credenciales | README y `docs/` | Revisión documental y comandos locales | Completo |
@@ -46,6 +46,6 @@ Verificación: build correcto, 42/42 pruebas unitarias e integración aprobadas,
 
 ## Auditoría de rúbrica
 
-No se asigna 100/100 de forma automática. La estimación final se completará con resultados verificables en `docs/pruebas.md`; publicación, contribuciones de tres personas y sustentación en vivo no pueden darse por realizadas desde esta sesión.
+No se asigna 100/100 de forma automática. La auditoría final está en `docs/auditoria-final.md`. Publicación verificada; contribuciones de tres personas y sustentación en vivo dependen del equipo humano.
 
 Repositorio público: https://github.com/PauloLepe003/ProyectoFinalArquitectura-EditorialNexus
